@@ -1,0 +1,74 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<vector>
+
+
+/*
+capacity number of elements
+value weight
+*/
+
+using std::vector;
+void print_vec(const vector<int>& vec) {
+    for (int i = 0; i < vec.size(); ++i) {
+        printf("%d ", vec[i]);
+    }
+    printf("\n");
+}
+
+
+void read_data(const char* filename, vector<int>* values, vector<int>* weights, int& capacity) {
+
+    FILE* fp;
+    if ((fp = fopen(filename, "r")) == NULL) {
+        perror("Error reading input file");
+    }
+    int num;
+    fscanf(fp, "%d %d\n", &capacity, &num);
+    values->resize(num);
+    weights->resize(num);
+    for (int i = 0; i < num; ++i) {
+        fscanf(fp, "%d %d\n", &values->at(i), &weights->at(i));
+    }
+}
+
+
+
+int estimate_cost_bound(int* values, int* weights, int size) {
+    int bound = 0;;
+    for (int i = 0; i < size; ++i) {
+        bound += weights[i];
+    }
+    return bound;
+}
+
+int knapsack_dfs(int* values, int* weights, int size) {
+    int cost_bound = estimate_cost_bound(values, weights, size);
+    int best_cost = 0;
+
+    int solution[size];
+    for (int i = 0; i < size; ++i) {
+        solution[i] = 0
+    }
+
+    int optimal_cost = _knapsack_dfs(values, weights, solution, last, coust_bound);
+    return optimal_cost
+
+}
+int _knapsack_dfs(int* values, int* weights, int* solution, int last, int cost_bound) {
+
+    if (cost) 
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
