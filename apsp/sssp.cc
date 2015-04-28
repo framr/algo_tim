@@ -6,12 +6,14 @@
 
 using std::vector;
 using std::unordered_map;
+using std::make_pair;
+using std::pair;
 
 struct Edge {
     int head;
     int tail;
     int weight;
-    Edge(int v_tail, int v_head, double w): tail(v_tail), head(v_head), weight(w) {};
+    Edge(int v_tail, int v_head, int w): tail(v_tail), head(v_head), weight(w) {};
 };
 
  
@@ -33,7 +35,7 @@ public:
     
     //Graph(int num_vertices) : adj_list(num_vertices) {adj_list.resize(num_vertices); directed = false;};
     
-    void insert(int tail, int head, double weight) {
+    void insert(int tail, int head, int weight) {
         Edge e = Edge(tail, head, weight);
         adj_list[tail].push_back(e);
         if (!directed) {
@@ -88,12 +90,12 @@ void read_graph(const char* infile, Graph* g) {
 }
 
 
-int bellman_ford(const Graph& g, int source, vector<int>* paths) {
+int bellman_ford(const Graph& g, int source, unordered_map<int, int>* paths) {
 
     // cost[v][budget] vector of shortest paths from source to v with fixed edge budget
     vector<vector<int> > cost;
     cost.resize(g.size() + 1, vector<int>(g.size()));
-    paths->resize(g.size());
+    //paths->resize(g.size());
 
     for (Graph::VertexIterator it = g.begin(); it != g.end(); ++it) {
         int v = it->first;
@@ -127,10 +129,81 @@ int bellman_ford(const Graph& g, int source, vector<int>* paths) {
 }
 
 
- 
+class PriorityQueue {
+
+    unordered_map<int, int> _pqueue;
+   
+public:
+
+    PriorityQueue() : {}
+
+    pair<int, int> min() {
+        min_elem = -1;
+        min_value = INFTY;
+        for (unordered_map<int, int>::const_iterator it = _pqueue.begin(); it != pqueue.end(); ++it) {
+            int el = it->first;
+            int value = it->second;
+            if (min_value > value) {
+                min_value = value;
+                min_elem = el;
+            }
+        }
+        return make_pair(min_elem, min_value);
+    }
+
+    void update(int element, int value) {
+        _pqueue[element] = value;
+    }
+    void insert(int element, int value) {
+        _pqueue[element] = value;
+    }
+    void remove(int elem) {
+        _pqueue.erase(elem);
+    }
+
+    int pop_min() {
+        int elem = this->min();
+        remove(elem);
+        return elem;
+    }
+    bool empty() {
+        return _pqueue.empty();
+    }
+}
+
+int dijkstra(const Graph& g, int source, const unordered_map<int, int>* paths) {
+    
+    PriorityQueue pq;
+    pq.insert(source, 0);
+    
+    while (!pq.empty()) {
+        
+        
+    }     
+
+}
+
+
+void output_result(const unordered_map<int, int>& paths) {
+    for (unordered_map<int, int>::const_iterator it = paths.begin(); it != paths.end(); ++it) {
+        int v = it->first;
+        int w = it->second; 
+        printf("%d %d\n", v, w); 
+    }
+
+}
+
+
 
 int main(int argc, char** argv) {
 
+    unordered_map<int, int> paths;
 
-    return 1;
+    Graph g;
+    read_graph(argv[1], &g);
+    bellman_ford(g, atoi(argv[2]), &paths);
+    output_result(paths);
+
+
+    return 0;
 }
