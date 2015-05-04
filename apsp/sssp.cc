@@ -2,7 +2,9 @@
 #include<cstdio>
 #include<vector>
 #include<unordered_map>
-#include<limits.h>
+#include<utility>
+#include "pqueue.h"
+
 
 using std::vector;
 using std::unordered_map;
@@ -28,7 +30,7 @@ class Graph {
 
     bool directed;
     unordered_map<int, vector<Edge> > adj_list;
-
+ 
 public:
    
     Graph() {directed = false;}
@@ -129,58 +131,39 @@ int bellman_ford(const Graph& g, int source, unordered_map<int, int>* paths) {
 }
 
 
-class PriorityQueue {
-
-    unordered_map<int, int> _pqueue;
-   
-public:
-
-    PriorityQueue() : {}
-
-    pair<int, int> min() {
-        min_elem = -1;
-        min_value = INFTY;
-        for (unordered_map<int, int>::const_iterator it = _pqueue.begin(); it != pqueue.end(); ++it) {
-            int el = it->first;
-            int value = it->second;
-            if (min_value > value) {
-                min_value = value;
-                min_elem = el;
-            }
-        }
-        return make_pair(min_elem, min_value);
-    }
-
-    void update(int element, int value) {
-        _pqueue[element] = value;
-    }
-    void insert(int element, int value) {
-        _pqueue[element] = value;
-    }
-    void remove(int elem) {
-        _pqueue.erase(elem);
-    }
-
-    int pop_min() {
-        int elem = this->min();
-        remove(elem);
-        return elem;
-    }
-    bool empty() {
-        return _pqueue.empty();
-    }
-}
-
-int dijkstra(const Graph& g, int source, const unordered_map<int, int>* paths) {
+void dijkstra(const Graph& g, int source, unordered_map<int, int>* distances) {
     
-    PriorityQueue pq;
+    MinHeap<int, int> pq;
     pq.insert(source, 0);
     
-    while (!pq.empty()) {
-        
-        
-    }     
+    unordered_map<int, int> d;
+    for (Graph::VertexIterator it = g.begin(); it != g.end(); ++it) {
+        distances->at(it->first) = INFTY;
+    }
 
+    while (!pq.empty()) {
+        pair<int, int> min_dist_element = pq.pop_min();
+        int v = min_dist_element.first;
+        int d = min_dist_element.second;
+
+        distances->at(v) = d; // best vertex in heap has true distance
+        for (Graph::EdgeIterator it = g.edge_begin(v); it != g.edge_end(v); ++it) {
+            int head = it->head;
+            int weight = it->weight;
+
+            if (!pq.contains(head)) {
+                // discovered vertex is not in the queue
+                pq.insert(head, d + weight);
+            } else {
+                pair<int, int> current_head_data;
+                current_head_data = pq.get_node(head);
+                if (current_head_data.second > (d + weight)) {
+                    pq.update(head, d + weight); 
+                } 
+            }    
+        }
+ 
+    }
 }
 
 
@@ -192,7 +175,6 @@ void output_result(const unordered_map<int, int>& paths) {
     }
 
 }
-
 
 
 int main(int argc, char** argv) {
