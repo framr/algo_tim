@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
-
 import sys
 from operator import attrgetter
+
+
+from dsu import DisjointSetUnion
 
 
 class Edge(object):
@@ -26,6 +28,7 @@ class Graph(object):
 def kruskal(graph):
     
     edges = sorted([edge for v, edge in graph.vertices()], key=attrgetter('weight'))
+    for edge in edges:
 
 
 
