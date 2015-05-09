@@ -1,4 +1,3 @@
-
 class DisjointSetUnion(object):
 
     def __init__(self, vertices):
@@ -12,13 +11,24 @@ class DisjointSetUnion(object):
         if v == self.parents[v]:
             return v
         root = self.find(self.parents[v])
-        self.parents[v] = root # path compression
+        self.parents[v] = root # paths compression
         return root
 
     def union(self, u, v):
         
-        if self.ranks[u] < ranks[v]:
+        if self.ranks[u] < self.ranks[v]:
+            self.parents[u] = v
+        else:
+            self.parents[v] = u
+            if self.ranks[u] == self.ranks[v]:
+                # merging trees of the same height is the only case rank goes up 
+                self.ranks[u] += 1
 
+    def parent(self, v):
+        return self.parents[v]
 
-    def rank(self, v):
-        return 0
+    def vertices(self):
+        return self.parents.__iter__()
+
+               
+    
